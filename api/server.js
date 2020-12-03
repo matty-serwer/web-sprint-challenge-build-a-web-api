@@ -1,7 +1,21 @@
 const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
+const actionsRouter = require('./actions/actions-router');
+const projectsRouter = require('./projects/projects-router');
+ 
 const server = express();
 
-// Complete your server here!
-// Do NOT `server.listen()` inside this file!
+server.use(cors());
+server.use(morgan('dev'));
+server.use(express.json());
+
+server.use('/api/actions', actionsRouter);
+server.use('/api/projectsRouter', projectsRouter);
+
+server.get('/', (req, res) => {
+    res.send('<h1>Sprint Challange Baby!</h1>');
+})
+
 
 module.exports = server;
