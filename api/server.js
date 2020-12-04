@@ -11,7 +11,7 @@ server.use(morgan('dev'));
 server.use(express.json());
 
 server.use('/api/actions', actionsRouter);
-server.use('/api/projectsRouter', projectsRouter);
+server.use('/api/projects', projectsRouter);
 
 server.get('/', (req, res) => {
     res.send('<h1>Sprint Challange Baby!</h1>');

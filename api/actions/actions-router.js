@@ -3,12 +3,6 @@ const router = express.Router();
 const Action = require("./actions-model");
 const Project = require("../projects/projects-model");
 
-// [GET] /api/actions sends an array of actions (or an empty array) as the body of the response.
-// [GET] /api/actions/:id sends an action with the given id as the body of the response.
-// [POST] /api/actions sends the newly created action as the body of the response.
-// [PUT] /api/actions sends the updated action as the body of the response.
-// [DELETE] /api/actions sends no response body.
-
 // middleware
 
 const validateActionId = async (req, res, next) => {
@@ -44,12 +38,6 @@ const validateProjectId = async (req, res, next) => {
     }
 }
 
-// id	number	no need to provide it when creating posts, the database will automatically generate it
-// project_id	number	required, must be the id of an existing project
-// description	string	up to 128 characters long, required
-// notes	string	no size limit, required. Used to record additional notes or requirements to complete the action
-// completed	boolean	used to indicate if the action has been completed, not required
-
 function validateAction(req, res, next) {
     if(!req.body) {
         res.status(400).json({ message: "Missing action data" })
@@ -63,9 +51,7 @@ function validateAction(req, res, next) {
     next();
 }
 
-
-
-// requests
+// endpoints
 
 router.get("/", (req, res) => {
   Action.get()
@@ -107,7 +93,7 @@ router.put("/:id", validateAction, validateActionId, (req, res) => {
 router.delete("/:id", validateActionId, (req, res) => {
     Action.remove(req.params.id)
         .then(action => {
-            res.status(200).json(action)
+            res.status(200).json({ "message": "Action deleted"})
         })
         .catch(error => {
             console.log(error)
