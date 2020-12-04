@@ -27,14 +27,28 @@ const validateProjectIdParam = async (req, res, next) => {
   }
 };
 
+const getActionsForProject = async (req, res, next) => {
+    try {
+        const actions = await Action.get();
+        req.actions = actions.filter(action => {
+            return action.project_id == req.params.id
+        })
+        next();
+    } catch (error) {
+        res.status(500).json({
+            message: "Error retrieving actions from database"
+        })
+    }
+}
+
 function validateProject(req, res, next) {
   if (!req.body) {
     res.status(400).json({ message: "Missing project data" });
-  }
-  if (!req.body.name || !req.body.description) {
+  } else if (!req.body.name || !req.body.description) {
     res.status(400).json({ message: "body and description are required" });
+  } else {
+    next();
   }
-  next();
 }
 
 // endpoints
@@ -59,6 +73,10 @@ router.get("/", (req, res) => {
 router.get("/:id", validateProjectIdParam, (req, res) => {
   res.status(200).json(req.project);
 });
+
+router.get("/:id/actions", validateProjectIdParam, getActionsForProject, (req, res) => {
+    res.status(200).json(req.actions)
+})
 
 router.post("/", validateProject, (req, res) => {
   Project.insert(req.body)
