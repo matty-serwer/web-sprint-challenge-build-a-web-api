@@ -73,7 +73,7 @@ router.get("/", (req, res) => {
             res.status(200).json(actions)
     })
     .catch((error) => {
-      console.log(error);
+    //   console.log(error);
       res.status(500).json({ message: "Server error retrieving actions" });
     });
 });
@@ -88,8 +88,30 @@ router.post("/", validateAction, validateProjectId, (req, res) => {
             res.status(201).json(action)
         })
         .catch(error => {
+            // console.log(error)
+            res.status(500).json({ message: "Server error posting new action"})
+        })
+})
+
+router.put("/:id", validateAction, validateActionId, (req, res) => {
+    Action.update(req.params.id, req.body)
+        .then(action => {
+            res.status(201).json(action)
+        }) 
+        .catch(error => {
+            // console.log(error)
+            res.status(500).json({ message: "Server error updating action" })
+        })
+});
+
+router.delete("/:id", validateActionId, (req, res) => {
+    Action.remove(req.params.id)
+        .then(action => {
+            res.status(200).json(action)
+        })
+        .catch(error => {
             console.log(error)
-            res.status(500).json({ message: "Server error posting new user"})
+            res.status(500).json({ message: "Server error deleting action" })
         })
 })
 
